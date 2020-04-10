@@ -1,44 +1,45 @@
 ﻿using Aircompany.Models;
+using System.Text;
+using System.Linq;
 
 namespace Aircompany.Planes
 {
     public class MilitaryPlane : Plane
     {
-        public MilitaryType _type;
+        private static readonly string TO_STRING_DECORE_ELEMENT_TYPE = ", type=";
+
+        public MilitaryType Type { get; private set; }
 
         public MilitaryPlane(string model, int maxSpeed, int maxFlightDistance, int maxLoadCapacity, MilitaryType type)
             : base(model, maxSpeed, maxFlightDistance, maxLoadCapacity)
         {
-            _type = type;
+            Type = type;
         }
 
         public override bool Equals(object obj)
         {
-            var plane = obj as MilitaryPlane;
-            return plane != null &&
-                   base.Equals(obj) &&
-                   _type == plane._type;
+            if (obj is MilitaryPlane plane) 
+            {
+                return base.Equals(obj) &&
+                       Type == plane.Type;
+            }
+            return false;            
         }
 
         public override int GetHashCode()
         {
             var hashCode = 1701194404;
-            hashCode = hashCode * -1521134295 + base.GetHashCode();
-            hashCode = hashCode * -1521134295 + _type.GetHashCode();
+            hashCode *= HASH_SUMMAND + base.GetHashCode();
+            hashCode *= HASH_SUMMAND + Type.GetHashCode();
             return hashCode;
         }
 
-        public MilitaryType PlaneTypeIs()
-        {
-            return _type;
-        }
-
-
         public override string ToString()
         {
-            return base.ToString().Replace("}",
-                    ", type=" + _type +
-                    '}');
+            StringBuilder stringToAdd = new StringBuilder(TO_STRING_DECORE_ELEMENT_TYPE);
+            stringToAdd.Append(Type);
+            stringToAdd.Append(TO_STRING_DECORE_ELEMENTS.Last());
+            return base.ToString().Replace(TO_STRING_DECORE_ELEMENTS.Last(), stringToAdd.ToString());
         }        
     }
 }

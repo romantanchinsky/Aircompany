@@ -1,71 +1,62 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace Aircompany.Planes
 {
     public abstract class Plane
     {
-        public string _model;
-        public int _maxSpeed;
-        public int _maxFlightDistance;
-        public int _maxLoadCapacity;
+        protected static string[] TO_STRING_DECORE_ELEMENTS = { "Plane{", "model='", "', maxSpeed=", ", maxFlightDistance=", ", maxLoadCapacity=", "}" };
+
+        protected const int HASH_SUMMAND = -1521134295;
+
+        public string Model { get; private set; }
+        public int MaxSpeed { get; private set; }
+        public int MaxFlightDistance { get; private set; }
+        public int MaxLoadCapacity { get; private set; }
 
         public Plane(string model, int maxSpeed, int maxFlightDistance, int maxLoadCapacity)
         {
-            _model = model;
-            _maxSpeed = maxSpeed;
-            _maxFlightDistance = maxFlightDistance;
-            _maxLoadCapacity = maxLoadCapacity;
-        }
-
-        public string GetModel()
-        {
-            return _model;
-        }
-
-        public int GetMS()
-        {
-            return _maxSpeed;
-        }
-
-        public int MAXFlightDistance()
-        {
-            return _maxFlightDistance;
-        }
-
-        public int MAXLoadCapacity()
-        {
-            return _maxLoadCapacity;
+            Model = model;
+            MaxSpeed = maxSpeed;
+            MaxFlightDistance = maxFlightDistance;
+            MaxLoadCapacity = maxLoadCapacity;
         }
 
         public override string ToString()
         {
-            return "Plane{" +
-                "model='" + _model + '\'' +
-                ", maxSpeed=" + _maxSpeed +
-                ", maxFlightDistance=" + _maxFlightDistance +
-                ", maxLoadCapacity=" + _maxLoadCapacity +
-                '}';
+            StringBuilder outString = new StringBuilder(TO_STRING_DECORE_ELEMENTS[0]);
+            outString.Append(TO_STRING_DECORE_ELEMENTS[1]);
+            outString.Append(Model);
+            outString.Append(TO_STRING_DECORE_ELEMENTS[2]);
+            outString.Append(MaxSpeed);
+            outString.Append(TO_STRING_DECORE_ELEMENTS[3]);
+            outString.Append(MaxFlightDistance);
+            outString.Append(TO_STRING_DECORE_ELEMENTS[4]);
+            outString.Append(MaxLoadCapacity);
+            outString.Append(TO_STRING_DECORE_ELEMENTS[5]);
+            return outString.ToString();
         }
 
         public override bool Equals(object obj)
         {
-            var plane = obj as Plane;
-            return plane != null &&
-                   _model == plane._model &&
-                   _maxSpeed == plane._maxSpeed &&
-                   _maxFlightDistance == plane._maxFlightDistance &&
-                   _maxLoadCapacity == plane._maxLoadCapacity;
+            if (obj is Plane plane)
+            {
+                return Model == plane.Model &&
+                       MaxSpeed == plane.MaxSpeed &&
+                       MaxFlightDistance == plane.MaxFlightDistance &&
+                       MaxLoadCapacity == plane.MaxLoadCapacity;
+            }
+                return false;
         }
 
         public override int GetHashCode()
         {
             var hashCode = -1043886837;
-            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(_model);
-            hashCode = hashCode * -1521134295 + _maxSpeed.GetHashCode();
-            hashCode = hashCode * -1521134295 + _maxFlightDistance.GetHashCode();
-            hashCode = hashCode * -1521134295 + _maxLoadCapacity.GetHashCode();
+            hashCode *= HASH_SUMMAND + EqualityComparer<string>.Default.GetHashCode(Model);
+            hashCode *= HASH_SUMMAND + MaxSpeed.GetHashCode();
+            hashCode *= HASH_SUMMAND + MaxFlightDistance.GetHashCode();
+            hashCode *= HASH_SUMMAND + MaxLoadCapacity.GetHashCode();
             return hashCode;
         }        
-
     }
 }

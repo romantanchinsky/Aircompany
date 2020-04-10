@@ -1,45 +1,44 @@
-﻿using System;
+﻿using System.Linq;
+using System.Text;
 
 namespace Aircompany.Planes
 {
     public class PassengerPlane : Plane
     {
-        public int _passengersCapacity;
+        private static readonly string TO_STRING_DECORE_ELEMENT_PASSENGERS_CAPACITY = ", passengersCapacity=";
+
+        public int PassengersCapacity { get; private set; }
 
         public PassengerPlane(string model, int maxSpeed, int maxFlightDistance, int maxLoadCapacity, int passengersCapacity)
             :base(model, maxSpeed, maxFlightDistance, maxLoadCapacity)
         {
-            _passengersCapacity = passengersCapacity;
+            PassengersCapacity = passengersCapacity;
         }
 
         public override bool Equals(object obj)
         {
-            var plane = obj as PassengerPlane;
-            return plane != null &&
-                   base.Equals(obj) &&
-                   _passengersCapacity == plane._passengersCapacity;
+            if (obj is PassengerPlane plane)
+            {
+                return base.Equals(obj) &&
+                       PassengersCapacity == plane.PassengersCapacity;
+            }
+            return false;
         }
 
         public override int GetHashCode()
         {
             var hashCode = 751774561;
-            hashCode = hashCode * -1521134295 + base.GetHashCode();
-            hashCode = hashCode * -1521134295 + _passengersCapacity.GetHashCode();
+            hashCode *= HASH_SUMMAND + base.GetHashCode();
+            hashCode *= HASH_SUMMAND + PassengersCapacity.GetHashCode();
             return hashCode;
         }
-
-        public int PassengersCapacityIs()
-        {
-            return _passengersCapacity;
-        }
-
        
         public override string ToString()
         {
-            return base.ToString().Replace("}",
-                    ", passengersCapacity=" + _passengersCapacity +
-                    '}');
-        }       
-        
+            StringBuilder stringToAdd = new StringBuilder(TO_STRING_DECORE_ELEMENT_PASSENGERS_CAPACITY);
+            stringToAdd.Append(PassengersCapacity);
+            stringToAdd.Append(TO_STRING_DECORE_ELEMENTS.Last());
+            return base.ToString().Replace(TO_STRING_DECORE_ELEMENTS.Last(), stringToAdd.ToString());
+        }               
     }
 }
